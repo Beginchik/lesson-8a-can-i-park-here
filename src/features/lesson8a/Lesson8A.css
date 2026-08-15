@@ -495,13 +495,13 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 11px;
 }
-.lesson-8a-hw-signs article {
+.lesson-8a-hw-sign {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
 }
-.lesson-8a-hw-signs article > i { font-size: 2.8rem; font-style: normal; text-align: center; }
+.lesson-8a-hw-sign > i { font-size: 2.8rem; font-style: normal; text-align: center; }
 .lesson-8a-select-row {
   display: flex;
   align-items: center;
@@ -1497,8 +1497,7 @@ input.is-incorrect { border-color: #cc5963 !important; background: #fff0f1 !impo
 .lesson-8a-sounds article > div:first-child > b { align-self: start; font-size: 1.05rem; }
 .lesson-8a-sounds article > div:last-child { display: grid; }
 .lesson-8a-sounds article > div:last-child p {
-  display: flex;
-  align-items: center;
+  display: block;
   margin: 0;
   padding: 12px 15px;
   border-bottom: 1px solid #e6e0e3;
@@ -1751,4 +1750,47 @@ input.is-incorrect { border-color: #cc5963 !important; background: #fff0f1 !impo
   .lesson-nav-scrim {
     transition: none;
   }
+}
+/* Lesson 8A homework presentation */
+.lesson-8a-homework-plan {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.lesson-8a-homework-plan > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  padding: 15px;
+  border: 1px solid #d9e5e3;
+  border-radius: 15px;
+  background: #f5faf9;
+}
+.lesson-8a-homework-plan strong { color: #168f82; font-size: 1.55rem; }
+.lesson-8a-homework-plan span { display: grid; gap: 2px; }
+.lesson-8a-homework-plan b { color: #27434a; }
+.lesson-8a-homework-plan small { color: #68757a; line-height: 1.3; }
+.lesson-8a-homework .homework-extra > summary b { margin-right: auto; }
+.lesson-8a-homework .homework-extra > summary small { font-weight: 800; }
+.lesson-8a-homework .homework-extra > div { border-top: 1px solid #e7e0d7; padding-top: 16px; }
+.lesson-8a-homework-example { margin: 0 0 14px; }
+.lesson-8a-homework-example p { display: block; }
+.lesson-8a-homework-example i { margin-right: 8px; font-size: 1.6rem; font-style: normal; vertical-align: middle; }
+.lesson-8a-hw-sign {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid #ddd6cd;
+  border-radius: 14px;
+  background: #fff;
+}
+.lesson-8a-hw-sign > i { font-size: 2.8rem; font-style: normal; text-align: center; }
+.lesson-8a-hw-sign .lesson-8a-choice { padding: 0; border: 0; background: transparent; }
+@media (max-width: 760px) {
+  .lesson-8a-homework-plan { grid-template-columns: 1fr; }
+  .lesson-8a-hw-sign { grid-template-columns: 54px minmax(0, 1fr); }
 }

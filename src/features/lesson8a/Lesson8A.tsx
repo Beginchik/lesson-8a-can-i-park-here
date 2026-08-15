@@ -146,7 +146,7 @@ function Feedback({ correct, hint, success = "Correct." }: { correct: boolean; h
 
 function Choice({ id, prompt, options, correct, answers, onAnswer, Text, hint = "Read or listen again and try once more." }: ExerciseProps & { id: string; prompt: string; options: readonly string[]; correct: string; hint?: string }) {
   const value = answers[id] ?? "";
-  return <article className="lesson-8a-choice"><p><Text>{prompt}</Text></p><div>{options.map((option) => <button aria-pressed={value === option} className={value === option ? (option === correct ? "is-correct" : "is-incorrect") : ""} key={option} onClick={() => onAnswer(id, option)} type="button">{option}</button>)}</div>{value && <Feedback correct={value === correct} hint={hint} />}</article>;
+  return <article className="lesson-8a-choice">{prompt && <p><Text>{prompt}</Text></p>}<div>{options.map((option) => <button aria-pressed={value === option} className={value === option ? (option === correct ? "is-correct" : "is-incorrect") : ""} key={option} onClick={() => onAnswer(id, option)} type="button">{option}</button>)}</div>{value && <Feedback correct={value === correct} hint={hint} />}</article>;
 }
 
 function AnswerInput({ id, prompt, correct, answers, onAnswer, Text, placeholder = "Type your answer", hint = "Check can or can't, the verb, and the word order." }: ExerciseProps & { id: string; prompt: string; correct: string | readonly string[]; placeholder?: string; hint?: string }) {
@@ -540,7 +540,7 @@ function Homework(props: ExerciseProps) {
 
     <details className="homework-extra" open><summary><span>1</span><b><Text>Signs: choose the meaning.</Text></b></summary><div>
       <div className="practice-example lesson-8a-homework-example"><span>EXAMPLE</span><p><i>🚫📷</i><Text>You can't take photos here.</Text></p></div>
-      <div className="lesson-8a-hw-signs">{homeworkSigns.map(([icon, correct], index) => <div className="lesson-8a-hw-sign" key={correct}><i>{icon}</i><Choice id={"8a-homework-sign-" + (index + 1)} prompt={"Sign " + (index + 1)} options={index % 2 === 0 ? [correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't"), correct] : [correct, correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't")]} correct={correct} {...props} /></div>)}</div>
+      <div className="lesson-8a-hw-signs">{homeworkSigns.map(([icon, correct], index) => <div aria-label={"Sign " + (index + 1)} className="lesson-8a-hw-sign" key={correct} role="group"><i aria-hidden="true">{icon}</i><Choice id={"8a-homework-sign-" + (index + 1)} prompt="" options={index % 2 === 0 ? [correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't"), correct] : [correct, correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't")]} correct={correct} {...props} /></div>)}</div>
     </div></details>
 
     <details className="homework-extra" open><summary><span>2</span><b><Text>Build the questions.</Text></b></summary><div className="lesson-8a-input-list"><div className="practice-example"><span>EXAMPLE</span><p><Text>Can I have an espresso, please?</Text></p></div>{homeworkQuestions.map(([prompt, correct], index) => <AnswerInput id={"8a-homework-question-" + (index + 1)} key={prompt} prompt={(index + 1) + ". " + prompt} correct={correct} {...props} />)}</div></details>

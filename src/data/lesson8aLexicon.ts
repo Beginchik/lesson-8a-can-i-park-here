@@ -18,6 +18,8 @@ export const lesson8aSeeds: EntrySeed[] = [
   ["sentence rhythm", "noun", "/ˈsentəns ˌrɪðəm/", "the pattern of strong and weak words in a sentence", "ритм предложения", "Listen and copy the sentence rhythm.", "Sentence rhythm makes speech sound natural."],
   ["town centre", "noun", "/ˌtaʊn ˈsentə/", "the central part of a town", "центр города", "Where can I park in the town centre?", "The market is in the town centre."],
   ["road sign", "noun", "/ˈrəʊd saɪn/", "a sign beside a road that gives information or rules", "дорожный знак", "Look at the road sign.", "This road sign means you can't park here."],
+  ["sign", "noun", "/saɪn/", "a notice, picture, or symbol that gives information or instructions", "знак; указатель; табличка", "What does this sign mean?", "This sign says you can't park here."],
+  ["signs", "plural noun", "/saɪnz/", "notices, pictures, or symbols that give information or instructions", "знаки; указатели; таблички", "Look at the signs.", "What do these signs mean?"],
   ["pass", "verb", "/pɑːs/", "to be successful in a test", "сдать экзамен", "Does Anna pass the test?", "I can pass the theory test."],
   ["fail", "verb", "/feɪl/", "to be unsuccessful in a test", "не сдать экзамен", "Many people fail the first time.", "You fail after two mistakes."],
   ["permission", "noun", "/pəˈmɪʃən/", "the right to do something", "разрешение", "Use can to ask for permission.", "You have permission to park here."],

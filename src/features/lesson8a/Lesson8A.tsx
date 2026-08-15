@@ -60,6 +60,7 @@ function normalize(value: string) {
 
 export function Lesson8A({ onLessonChange: _onLessonChange }: { onLessonChange: (lesson: CourseLessonId) => void }) {
   const [view, setView] = useState<ViewId>("overview");
+  const [navOpen, setNavOpen] = useState(false);
   const [progress, setProgress] = useState<Progress>(loadProgress);
   const [activeWord, setActiveWord] = useState<ActiveWord>(null);
   const [reference, setReference] = useState<ReferenceKind>(null);
@@ -71,6 +72,13 @@ export function Lesson8A({ onLessonChange: _onLessonChange }: { onLessonChange: 
     const frame = window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
     return () => window.cancelAnimationFrame(frame);
   }, [view]);
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setNavOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
 
   const Text = ({ children, className }: { children: string; className?: string }) => (
     <ClickableText className={className} onWord={(entry, context) => setActiveWord({ entry, context })} text={children} />
@@ -111,8 +119,12 @@ export function Lesson8A({ onLessonChange: _onLessonChange }: { onLessonChange: 
       <div className="lesson-1b-reference-links"><button onClick={() => setReference("grammar")} type="button">Grammar</button><button onClick={() => setReference("vocabulary")} type="button">Vocabulary</button></div>
       <div className="topbar-tools"><button className="reset-trigger" disabled={view === "overview"} onClick={resetSection} type="button"><span>↻</span><span>Section</span></button><button className="reset-trigger" onClick={() => { if (window.confirm("Reset all answers in lesson 8A?")) setProgress(emptyProgress); }} type="button"><span>↻</span><span>Lesson</span></button><div className="progress-summary"><span>{percent}%</span><div><b style={{ width: percent + "%" }} /></div><small>Lesson progress</small></div></div>
     </header>
+    <button aria-label="Close slide navigation" className={"lesson-nav-scrim " + (navOpen ? "is-visible" : "")} onClick={() => setNavOpen(false)} type="button" />
+    <div className={"lesson-nav-drawer " + (navOpen ? "is-open" : "")} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setNavOpen(false); }} onFocus={() => setNavOpen(true)} onMouseEnter={() => setNavOpen(true)} onMouseLeave={() => setNavOpen(false)}>
+      <button aria-controls="lesson-8a-navigation" aria-expanded={navOpen} aria-label={navOpen ? "Hide slide navigation" : "Show slide navigation"} className="lesson-nav-toggle" onClick={() => setNavOpen((open) => !open)} type="button"><span aria-hidden="true">{navOpen ? "‹" : "☰"}</span><small>Slides</small></button>
+      <nav aria-label="Lesson sections" className="lesson-nav" id="lesson-8a-navigation"><p>LESSON 8A</p>{sections.map((section) => <button className={(section.id === view ? "active " : "") + (progress.completed.includes(section.id) ? "complete " : "") + (section.id === "homework" ? "homework-link" : "")} key={section.id} onClick={() => { setView(section.id); setNavOpen(false); }} type="button"><span>{section.number}</span>{section.label}{progress.completed.includes(section.id) && <i>✓</i>}</button>)}</nav>
+    </div>
     <div className="course-layout">
-      <nav aria-label="Lesson sections" className="lesson-nav"><p>LESSON 8A</p>{sections.map((section) => <button className={(section.id === view ? "active " : "") + (progress.completed.includes(section.id) ? "complete " : "") + (section.id === "homework" ? "homework-link" : "")} key={section.id} onClick={() => setView(section.id)} type="button"><span>{section.number}</span>{section.label}{progress.completed.includes(section.id) && <i>✓</i>}</button>)}</nav>
       <main>{content}<div className="lesson-actions"><button className="secondary-action" disabled={currentIndex === 0} onClick={() => setView(sections[Math.max(0, currentIndex - 1)].id)} type="button">← Previous</button><button className="primary-action" onClick={finish} type="button">{progress.completed.includes(view) ? "Completed ✓" : view === "homework" ? "Mark homework ready" : "Complete & continue"}</button></div></main>
     </div>
     {activeWord && <WordCard context={activeWord.context} entry={activeWord.entry} lessonId="8a-can-i-park-here" onClose={() => setActiveWord(null)} />}
@@ -533,7 +545,7 @@ function Homework(props: ExerciseProps) {
 }
 
 function ReferencePanel({ kind, onClose, Text }: { kind: Exclude<ReferenceKind, null>; onClose: () => void; Text: TextComponent }) {
-  const vocabulary = [["drive", "control and move a car"], ["park", "leave a car in a place"], ["swim", "move through water"], ["take photos", "make pictures with a camera"], ["pay by card", "use a bank card to pay"], ["change money", "exchange one currency for another"], ["use the internet", "go online"], ["use your phone", "make calls or use apps"], ["play football", "play the sport"], ["have a coffee", "drink a coffee"]] as const;
+  const vocabulary = [["drive", "control and move a car"], ["driving licence", "the document that permits you to drive"], ["driving instructor", "a person who teaches you to drive"], ["driving lesson", "a class in which you learn to drive"], ["learn to drive", "study and practise driving"], ["book a lesson", "arrange a lesson for a time"], ["practise online", "do practice activities on the internet"], ["theory test", "a written test about driving rules"], ["practical test", "a test in which you show that you can drive"], ["psychological test", "a test of how a person thinks or reacts"], ["take a test", "do a test or examination"], ["pass", "be successful in a test"], ["fail", "be unsuccessful in a test"], ["park", "leave a car in a place"], ["yellow line", "a road marking that shows a parking rule"], ["road sign", "a sign that gives road information or rules"], ["take photos", "make pictures with a camera"], ["pay by card", "use a bank card to pay"], ["pay cash", "pay using notes or coins"], ["change money", "exchange one currency for another"], ["use the internet", "go online"], ["use your phone", "make calls or use apps"], ["play football", "play the sport"], ["swim", "move through water"], ["have a coffee", "drink a coffee"], ["start the car", "turn on the car engine"], ["I'm free", "I am available at that time"], ["town centre", "the central part of a town"], ["sentence rhythm", "the pattern of strong and weak words"]] as const;
   return <div className="reference-backdrop" onMouseDown={onClose}><aside aria-modal="true" className={"reference-panel lesson-1b-reference-panel " + kind} onMouseDown={(event) => event.stopPropagation()} role="dialog">
     <header className="reference-panel-header"><div><p>{kind === "grammar" ? "GRAMMAR 8A" : "VOCABULARY 8A"}</p><h2><Text>{kind === "grammar" ? "Can / can't" : "More verb phrases"}</Text></h2></div><button aria-label="Close" onClick={onClose} type="button">×</button></header>
     <div className="reference-panel-body lesson-8a-reference-body">{kind === "grammar" ? <>

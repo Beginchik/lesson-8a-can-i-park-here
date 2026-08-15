@@ -140,7 +140,7 @@
 
 .lesson-8a-choice > p { margin: 0; line-height: 1.5; }
 .lesson-8a-choice > div { display: flex; flex-wrap: wrap; gap: 8px; }
-.lesson-8a-choice button {
+.lesson-8a-choice > div > button {
   min-height: 42px;
   padding: 8px 13px;
   border: 1px solid #cfc7bc;
@@ -151,13 +151,13 @@
   font-weight: 750;
   cursor: pointer;
 }
-.lesson-8a-choice button:hover,
-.lesson-8a-choice button:focus-visible {
+.lesson-8a-choice > div > button:hover,
+.lesson-8a-choice > div > button:focus-visible {
   border-color: var(--eight-teal);
   outline: 3px solid rgba(19, 168, 173, .13);
 }
-.lesson-8a-choice button.is-correct { border-color: #299b6b; color: #176d4a; background: #e8f7ed; }
-.lesson-8a-choice button.is-incorrect { border-color: #cc5963; color: #8d3038; background: #fff0f1; }
+.lesson-8a-choice > div > button.is-correct { border-color: #299b6b; color: #176d4a; background: #e8f7ed; }
+.lesson-8a-choice > div > button.is-incorrect { border-color: #cc5963; color: #8d3038; background: #fff0f1; }
 
 .lesson-8a-reading-intro {
   display: grid;
@@ -464,7 +464,7 @@
 }
 .lesson-8a-phrase-cards article > span { font-size: 1.8rem; }
 
-.lesson-8a-self-choice button.is-selected {
+.lesson-8a-self-choice > div > button.is-selected {
   border-color: #0f9488;
   background: #dff7f2;
   box-shadow: 0 0 0 3px rgba(15, 148, 136, 0.12);

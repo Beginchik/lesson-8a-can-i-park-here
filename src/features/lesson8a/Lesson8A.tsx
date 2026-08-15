@@ -1,6 +1,6 @@
 import { useEffect, useState, type ComponentType, type ReactNode } from "react";
 import { ClickableText } from "../../components/ClickableText";
-import { LessonPicker, type CourseLessonId } from "../../components/LessonPicker";
+import { type CourseLessonId } from "../../components/LessonPicker";
 import { WordCard } from "../../components/WordCard";
 import type { LexicalEntry } from "../../types";
 import "./Lesson8A.css";
@@ -54,7 +54,7 @@ function normalize(value: string) {
   return value.toLocaleLowerCase("en").replace(/[’]/g, "'").replace(/[.,!?]/g, "").replace(/\s+/g, " ").trim();
 }
 
-export function Lesson8A({ onLessonChange }: { onLessonChange: (lesson: CourseLessonId) => void }) {
+export function Lesson8A({ onLessonChange: _onLessonChange }: { onLessonChange: (lesson: CourseLessonId) => void }) {
   const [view, setView] = useState<ViewId>("overview");
   const [progress, setProgress] = useState<Progress>(loadProgress);
   const [activeWord, setActiveWord] = useState<ActiveWord>(null);
@@ -100,8 +100,8 @@ export function Lesson8A({ onLessonChange }: { onLessonChange: (lesson: CourseLe
 
   return <div className="course-shell lesson-8a-theme">
     <header className="topbar">
-      <div className="brand"><img alt="To Be English" className="brand-logo" src="./media/brand/to-be-english-logo.png" /><div><strong>BEGINNER ENGLISH</strong><small>Private course · on this device</small></div></div>
-      <LessonPicker activeLesson="8a" onSelect={onLessonChange} />
+      <div className="brand"><img alt="To Be English" className="brand-logo" src="./media/brand/to-be-english-logo.png" /><div><strong>BEGINNER ENGLISH</strong><small>Lesson 8A · Online class and homework</small></div></div>
+      <div className="lesson-8a-standalone-label">ONLINE LESSON 8A</div>
       <div className="lesson-1b-reference-links"><button onClick={() => setReference("grammar")} type="button">Grammar</button><button onClick={() => setReference("vocabulary")} type="button">Vocabulary</button></div>
       <div className="topbar-tools"><button className="reset-trigger" disabled={view === "overview"} onClick={resetSection} type="button"><span>↻</span><span>Section</span></button><button className="reset-trigger" onClick={() => { if (window.confirm("Reset all answers in lesson 8A?")) setProgress(emptyProgress); }} type="button"><span>↻</span><span>Lesson</span></button><div className="progress-summary"><span>{percent}%</span><div><b style={{ width: percent + "%" }} /></div><small>Lesson progress</small></div></div>
     </header>
@@ -114,8 +114,8 @@ export function Lesson8A({ onLessonChange }: { onLessonChange: (lesson: CourseLe
   </div>;
 }
 
-function Heading({ eyebrow, title, Text }: { eyebrow: string; title: string; Text: TextComponent }) {
-  return <div className="lesson-1b-heading"><p>{eyebrow}</p><h2><Text>{title}</Text></h2></div>;
+function Heading({ eyebrow, title, Text, mode = "CORE" }: { eyebrow: string; title: string; Text: TextComponent; mode?: "CORE" | "IF THERE IS TIME" }) {
+  return <div className="lesson-1b-heading lesson-8a-section-heading"><div><p>{eyebrow}</p><span className={mode === "CORE" ? "core" : "extra"}>{mode}</span></div><h2><Text>{title}</Text></h2></div>;
 }
 
 function Track({ file, label }: { file: string; label: string }) {
@@ -131,11 +131,20 @@ function Choice({ id, prompt, options, correct, answers, onAnswer, Text, hint = 
   return <article className="lesson-8a-choice"><p><Text>{prompt}</Text></p><div>{options.map((option) => <button aria-pressed={value === option} className={value === option ? (option === correct ? "is-correct" : "is-incorrect") : ""} key={option} onClick={() => onAnswer(id, option)} type="button">{option}</button>)}</div>{value && <Feedback correct={value === correct} hint={hint} />}</article>;
 }
 
-function AnswerInput({ id, prompt, correct, answers, onAnswer, Text, placeholder = "Type your answer" }: ExerciseProps & { id: string; prompt: string; correct: string | readonly string[]; placeholder?: string }) {
+function AnswerInput({ id, prompt, correct, answers, onAnswer, Text, placeholder = "Type your answer", hint = "Check can or can't, the verb, and the word order." }: ExerciseProps & { id: string; prompt: string; correct: string | readonly string[]; placeholder?: string; hint?: string }) {
+  const [checked, setChecked] = useState(false);
   const value = answers[id] ?? "";
   const accepted = Array.isArray(correct) ? correct : [correct];
   const ok = accepted.some((item) => normalize(value) === normalize(item));
-  return <label className="lesson-8a-input-row"><span><Text>{prompt}</Text></span><input aria-label={prompt} className={value ? (ok ? "is-correct" : "is-incorrect") : ""} onChange={(event) => onAnswer(id, event.target.value)} placeholder={placeholder} spellCheck="false" value={value} />{value && <Feedback correct={ok} hint="Check can or can't, the verb, and the word order." />}</label>;
+  return <div className="lesson-8a-input-row"><label><span><Text>{prompt}</Text></span><input aria-label={prompt} className={checked ? (ok ? "is-correct" : "is-incorrect") : ""} onChange={(event) => { onAnswer(id, event.target.value); setChecked(false); }} placeholder={placeholder} spellCheck="false" value={value} /></label><button className="lesson-8a-check-button" disabled={!value.trim()} onClick={() => setChecked(true)} type="button">Check</button>{checked && <Feedback correct={ok} hint={hint} />}</div>;
+}
+
+function MissingWordInput({ id, sentence, correct, answers, onAnswer, Text }: ExerciseProps & { id: string; sentence: string; correct: string }) {
+  const [checked, setChecked] = useState(false);
+  const value = answers[id] ?? "";
+  const [before, after] = sentence.split("___");
+  const ok = normalize(value) === normalize(correct);
+  return <div className="lesson-8a-missing-word"><span><Text>{before}</Text></span><input aria-label={sentence} className={checked ? (ok ? "is-correct" : "is-incorrect") : ""} onChange={(event) => { onAnswer(id, event.target.value); setChecked(false); }} spellCheck="false" value={value} /><span><Text>{after}</Text></span><button className="lesson-8a-check-button" disabled={!value.trim()} onClick={() => setChecked(true)} type="button">Check</button>{checked && <Feedback correct={ok} hint="The same word completes every sentence. Look at theory and practical." />}</div>;
 }
 
 function SelfChoice({ id, prompt, options, answers, onAnswer, Text }: ExerciseProps & { id: string; prompt: string; options: readonly string[] }) {
@@ -154,9 +163,18 @@ function Overview({ answers, onAnswer, Text, onReference }: ExerciseProps & { on
   </section>;
 }
 
-const drivingFacts = [
-  ["In Qatar, you can take the driving test when you are 14.", "Qatar"],
-  ["In some states, you only need a theory test, not a practical test.", "Mexico"],
+const drivingTestSentences = [
+  "In Qatar, you can take the driving ___ when you are 14.",
+  "In some states in Mexico, you only need a theory ___, not a practical one.",
+  "In Vietnam, the theory ___ has 450 questions.",
+  "In Croatia, you need 85 hours of lessons before the practical ___.",
+  "In Ukraine, two mistakes in the practical ___ mean you fail.",
+  "In Brazil, after your driving ___, you need a psychological test."
+] as const;
+
+const countryClues = [
+  ["You can take the driving test when you are 14.", "Qatar"],
+  ["In some states, a theory test is enough.", "Mexico"],
   ["The theory test has 450 questions.", "Vietnam"],
   ["You need 85 hours of lessons before the practical test.", "Croatia"],
   ["Two mistakes in the practical test mean you fail.", "Ukraine"],
@@ -167,34 +185,40 @@ function Reading(props: ExerciseProps) {
   const { answers, onAnswer, Text } = props;
   const countries = ["Brazil", "Croatia", "Mexico", "Qatar", "Ukraine", "Vietnam"];
   return <section className="lesson-panel"><Heading eyebrow="READING & SPEAKING" title="Driving round the world" Text={Text} />
-    <div className="lesson-1b-task lesson-8a-reading-intro"><img alt="Small colourful cars around a globe" src={media("driving-round-the-world.jpg")} /><div><h3><Text>Read the text. What is the missing word?</Text></h3><Choice id="8a-reading-missing-word" prompt="You can take a theory ____. You can also take a practical ____." options={["licence", "lessons", "test"]} correct="test" {...props} /></div></div>
-    <Track file="sb-8a-reading-check.mp3" label="Listen and check · 8.1" />
-    <div className="lesson-1b-task"><h3><Text>Which country? Read each fact and choose.</Text></h3><div className="lesson-8a-fact-grid">{drivingFacts.map(([fact, correct], index) => <Choice id={"8a-reading-country-" + (index + 1)} key={fact} prompt={(index + 1) + ". " + fact} options={countries} correct={correct} {...props} />)}</div></div>
+    <div className="lesson-1b-task lesson-8a-reading-intro"><img alt="Small colourful cars around a globe" src={media("driving-round-the-world.jpg")} /><div><h3><Text>Read the text. What is the missing word?</Text></h3><p><Text>The same word completes all the gaps.</Text></p></div></div>
+    <div className="lesson-1b-task"><div className="lesson-8a-core-label">CORE</div><div className="lesson-8a-missing-list">{drivingTestSentences.map((sentence, index) => <MissingWordInput id={"8a-reading-test-" + (index + 1)} key={sentence} sentence={(index + 1) + ". " + sentence} correct="test" {...props} />)}</div><Track file="sb-8a-reading-check.mp3" label="Listen and check · 8.1" /></div>
+    <div className="lesson-1b-task lesson-8a-extra-task"><div className="lesson-8a-core-label extra">IF THERE IS TIME</div><h3><Text>Which country? Match each fact to a country.</Text></h3><div className="lesson-8a-fact-grid">{countryClues.map(([fact, correct], index) => <Choice id={"8a-reading-country-" + (index + 1)} key={fact} prompt={(index + 1) + ". " + fact} options={countries} correct={correct} {...props} />)}</div><p className="lesson-8a-speaking-prompt"><Text>Which fact is the most surprising? Tell your teacher.</Text></p></div>
     <div className="lesson-1b-task"><h3><Text>In your country...</Text></h3><p><Text>Answer the questions. Short notes are OK. Use complete sentences when you speak.</Text></p>{["At what age can you get a driving licence?", "Do you need to take a theory test?", "Is the practical test difficult?", "Do people usually need a lot of driving lessons?", "Do many people fail the first time?"].map((prompt, index) => <label className="lesson-8a-writing-row" key={prompt}><span>{index + 1}</span><Text>{prompt}</Text><textarea onChange={(event) => onAnswer("8a-reading-country-note-" + (index + 1), event.target.value)} placeholder={index === 0 ? "Example: In my country you can get a driving licence when you are..." : "Write a short answer"} value={answers["8a-reading-country-note-" + (index + 1)] ?? ""} /></label>)}</div>
   </section>;
 }
 
 const annaPosts = [
   ["A", "I need some practical lessons with a good driving instructor. Friends, can you help?"],
-  ["B", "The theory test is very difficult. I can practise online, but I can't answer the questions."],
+  ["B", "The theory test is very difficult. I can practise online, but I can't answer the questions. “Can you park on a yellow line?” I don't know!"],
   ["C", "A pass in the theory — fantastic! My first lesson with Dad — total disaster! Now Dad says I can't practise in his car."]
 ] as const;
 
 const dialogueRows = [
-  ["Instructor", "Hello, can I ___ you?", "help"],
-  ["Anna", "Yes, can I ___ some driving lessons, please?", "book"],
-  ["Anna", "When can I ___?", "start"],
-  ["Instructor", "I'm free on Monday. We can ___ at your house.", "meet"],
-  ["Anna", "Can you ___ at 8.30?", "come"],
-  ["Anna", "OK. Can you ___ at ten o'clock?", "come"]
+  ["Instructor", "Hello, can I ", "help", " you?"],
+  ["Anna", "Yes, can I ", "book", " some driving lessons, please?"],
+  ["Instructor", "Yes, of course.", null, ""],
+  ["Anna", "When can I ", "start", "?"],
+  ["Instructor", "I'm free on Monday. We can ", "meet", " at your house."],
+  ["Anna", "Can you ", "come", " at 8.30?"],
+  ["Instructor", "No, sorry, I can't. I have a lesson at 8.00.", null, ""],
+  ["Anna", "OK. Can you ", "come", " at ten o'clock?"],
+  ["Instructor", "Yes, I can. The lessons are one hour, so 10.00 to 11.00, OK?", null, ""],
+  ["Anna", "Great!", null, ""],
+  ["Instructor", "What's your name and address?", null, ""],
+  ["Anna", "It's Anna Jones...", null, ""]
 ] as const;
 
 function Story(props: ExerciseProps) {
   const { answers, onAnswer, Text } = props;
   return <section className="lesson-panel"><Heading eyebrow="GRAMMAR IN CONTEXT" title="Anna learns to drive" Text={Text} />
-    <div className="lesson-1b-task"><h3><Text>Match Anna's posts A-C to pictures 1-3.</Text></h3><div className="lesson-8a-posts">{annaPosts.map(([letter, post]) => <article key={letter}><b>{letter}</b><p><Text>{post}</Text></p></article>)}</div><div className="lesson-8a-photo-match">{[["1", "💻", "B"], ["2", "💥", "C"], ["3", "🚕", "A"]].map(([number, icon, correct]) => { const id = "8a-story-post-" + number; const value = answers[id] ?? ""; return <label key={number}><span>{number}</span><i>{icon}</i><select aria-label={"Post for picture " + number} className={value ? (value === correct ? "is-correct" : "is-incorrect") : ""} onChange={(event) => onAnswer(id, event.target.value)} value={value}><option value="">Choose a post</option><option>A</option><option>B</option><option>C</option></select>{value && <Feedback correct={value === correct} hint="Read the date and event in each post again." />}</label>; })}</div><Track file="sb-8a-posts-check.mp3" label="Listen and check · 8.2" /></div>
-    <div className="lesson-1b-task"><h3><Text>Anna phones a driving instructor. Complete the conversation with the verbs.</Text></h3><div className="lesson-8a-word-bank">{["book", "come", "come", "help", "meet", "start"].map((word, index) => <span key={word + index}>{word}</span>)}</div><div className="lesson-8a-dialogue">{dialogueRows.map(([speaker, prompt, correct], index) => { const parts = prompt.split("___"); const id = "8a-story-dialogue-" + (index + 1); const value = answers[id] ?? ""; return <label className={speaker === "Anna" ? "speaker-b" : "speaker-a"} key={id}><b>{speaker}</b><span><Text>{parts[0]}</Text><select aria-label={prompt} className={value ? (value === correct ? "is-correct" : "is-incorrect") : ""} onChange={(event) => onAnswer(id, event.target.value)} value={value}><option value="">verb</option>{["book", "come", "help", "meet", "start"].map((word) => <option key={word}>{word}</option>)}</select><Text>{parts[1]}</Text></span>{value && <Feedback correct={value === correct} hint="Use the meaning of the whole sentence." />}</label>; })}</div><Track file="sb-8a-driving-instructor.mp3" label="Listen, check, and repeat · 8.3" /><div className="lesson-8a-model-dialogue compact"><p><b>Instructor</b><Text>No, sorry, I can't. I have a lesson at 8.00.</Text></p><p><b>Anna</b><Text>OK. Can you come at ten o'clock?</Text></p></div></div>
-    <div className="lesson-1b-task lesson-8a-test-result"><div><h3><Text>After three months, Anna takes her driving test.</Text></h3><Track file="sb-8a-driving-test.mp3" label="Listen. Does she pass? · 8.4" /><Choice id="8a-story-test-result" prompt="Does Anna pass her driving test?" options={["Yes, she does.", "No, she doesn't."]} correct="No, she doesn't." {...props} /></div><span aria-hidden="true">🚘</span></div>
+    <div className="lesson-1b-task"><h3><Text>Match Anna's posts A-C to photos 1-3.</Text></h3><div className="lesson-8a-posts">{annaPosts.map(([letter, post]) => <article key={letter}><b>{letter}</b><p><Text>{post}</Text></p></article>)}</div><div className="lesson-8a-photo-match">{[["1", "anna-photo-1.png", "B"], ["2", "anna-photo-2.png", "C"], ["3", "anna-photo-3.png", "A"]].map(([number, file, correct]) => { const id = "8a-story-post-" + number; const value = answers[id] ?? ""; return <label key={number}><span>{number}</span><img alt={"Driving story photo " + number} src={media(file)} /><select aria-label={"Post for picture " + number} className={value ? (value === correct ? "is-correct" : "is-incorrect") : ""} onChange={(event) => onAnswer(id, event.target.value)} value={value}><option value="">Choose a post</option><option>A</option><option>B</option><option>C</option></select>{value && <Feedback correct={value === correct} hint="Read the event in each post again." />}</label>; })}</div><Track file="sb-8a-posts-check.mp3" label="Listen and check · 8.2" /></div>
+    <div className="lesson-1b-task"><h3><Text>Anna phones a driving instructor. Complete the conversation with the verbs.</Text></h3><div className="lesson-8a-word-bank">{["book", "come", "come", "help", "meet", "start"].map((word, index) => <span key={word + index}>{word}</span>)}</div><div className="lesson-8a-dialogue-wrap"><div className="lesson-8a-dialogue">{dialogueRows.map(([speaker, before, correct, after], index) => { const id = "8a-story-dialogue-" + (index + 1); if (!correct) return <div className={speaker === "Anna" ? "speaker-b" : "speaker-a"} key={id}><b>{speaker}</b><span><Text>{before}</Text></span></div>; const value = answers[id] ?? ""; return <label className={speaker === "Anna" ? "speaker-b" : "speaker-a"} key={id}><b>{speaker}</b><span><Text>{before}</Text><select aria-label={before + " gap " + after} className={value ? (value === correct ? "is-correct" : "is-incorrect") : ""} onChange={(event) => onAnswer(id, event.target.value)} value={value}><option value="">verb</option>{["book", "come", "help", "meet", "start"].map((word) => <option key={word}>{word}</option>)}</select><Text>{after}</Text></span>{value && <Feedback correct={value === correct} hint="Use the meaning of the whole sentence." />}</label>; })}</div><img alt="Anna speaking to a driving instructor by phone" src={media("anna-phone-call.png")} /></div><Track file="sb-8a-driving-instructor.mp3" label="Listen and check · 8.3" /><div className="lesson-8a-practise-call"><strong>PAIR WORK</strong><Text>Practise the conversation. Then change the day and the lesson time.</Text></div></div>
+    <div className="lesson-1b-task lesson-8a-test-result"><div><h3><Text>After three months, Anna takes her driving test.</Text></h3><Track file="sb-8a-driving-test.mp3" label="Listen. Does she pass? · 8.4" /><Choice id="8a-story-test-result" prompt="Does Anna pass her driving test?" options={["Yes, she does.", "No, she doesn't."]} correct="No, she doesn't." {...props} /></div><img alt="Anna taking her driving test" src={media("anna-driving-test.png")} /></div>
   </section>;
 }
 
@@ -254,7 +278,7 @@ function Pronunciation(props: ExerciseProps) {
     <Track file="sb-8a-pronunciation-model.mp3" label="Listen and repeat the sounds and sentences. Copy the rhythm. · 8.6" /><div className="lesson-8a-sounds">{soundSentences.map(([sound, anchor, sentence]) => <article key={sound}><span>/{sound}/</span><b>{anchor}</b><props.Text>{sentence}</props.Text></article>)}</div>
     <div className="lesson-8a-pronunciation-note"><p><strong>can</strong> in a normal sentence is usually weak: /kən/.</p><p><strong>can't</strong> is strong and long in British English: /kɑːnt/.</p></div>
     <div className="lesson-1b-task"><h3><props.Text>Listen to the difference between can and can't.</props.Text></h3><Track file="sb-8a-can-cant-difference.mp3" label="Listen to a and b · 8.7" /><div className="lesson-8a-pairs">{canCantPairs.map(([a, b], index) => <p key={a}><b>{index + 1}</b><span>a · <props.Text>{a}</props.Text></span><span>b · <props.Text>{b}</props.Text></span></p>)}</div><Track file="sb-8a-circle-a-b.mp3" label="Listen and choose a or b · 8.8" /><div className="lesson-8a-ab-grid">{["a", "b", "b", "a"].map((correct, index) => <Choice id={"8a-pronunciation-ab-" + (index + 1)} key={index} prompt={"Item " + (index + 1)} options={["a", "b"]} correct={correct} {...props} />)}</div></div>
-    <div className="lesson-1b-task"><h3><props.Text>Listen to four conversations. Where are the people?</props.Text></h3><Track file="sb-8a-four-conversations.mp3" label="Listen and choose the place · 8.9" /><Choice id="8a-pronunciation-place-1" prompt="1. They are on a..." options={["bus", "street", "train"]} correct="train" {...props} /><Choice id="8a-pronunciation-place-2" prompt="2. They are in a..." options={["café", "shop", "hotel"]} correct="shop" {...props} /><Choice id="8a-pronunciation-place-3" prompt="3. They are in a..." options={["café", "restaurant", "taxi"]} correct="restaurant" {...props} /><Choice id="8a-pronunciation-place-4" prompt="4. They are in the..." options={["cinema", "street", "hotel"]} correct="street" {...props} /></div>
+    <div className="lesson-1b-task"><h3><props.Text>Listen to four conversations. Where are the people?</props.Text></h3><p><props.Text>First listen for the general situation. Then listen again and choose the exact place.</props.Text></p><Track file="sb-8a-four-conversations.mp3" label="Listen twice and choose the place · 8.9" /><Choice id="8a-pronunciation-place-1" prompt="1. They are on a..." options={["bus", "street", "train"]} correct="train" {...props} /><Choice id="8a-pronunciation-place-2" prompt="2. They are in a..." options={["café", "shop", "hotel"]} correct="shop" {...props} /><Choice id="8a-pronunciation-place-3" prompt="3. They are in a..." options={["café", "restaurant", "taxi"]} correct="restaurant" {...props} /><Choice id="8a-pronunciation-place-4" prompt="4. They are in the..." options={["cinema", "street", "hotel"]} correct="street" {...props} /></div>
   </section>;
 }
 
@@ -282,6 +306,7 @@ function Vocabulary(props: ExerciseProps) {
 function Speaking({ answers, onAnswer, Text }: ExerciseProps) {
   const questions = ["Where can I have a good, cheap meal?", "Where can I see films in English?", "Where can I go with small children?", "Where can I go in the evening?", "Can I go shopping in the evening?", "Can I park in the town centre?"];
   return <section className="lesson-panel"><Heading eyebrow="SPEAKING & WRITING" title="I'm a tourist. Where can I...?" Text={Text} />
+    <div className="lesson-8a-town-images"><img alt="A café terrace in town" src={media("town-cafe.png")} /><img alt="A shopping street" src={media("town-shopping.png")} /><img alt="A park and lake" src={media("town-park.png")} /></div>
     <div className="lesson-8a-role-grid"><article><span>🧳</span><h3><Text>Student A · Tourist</Text></h3><p><Text>Ask the questions. Add one question of your own.</Text></p>{questions.map((question) => <p key={question}><Text>{question}</Text></p>)}</article><article><span>🏠</span><h3><Text>Student B · Local person</Text></h3><p><Text>Answer with can or can't. Give one useful detail.</Text></p><p><Text>You can have a good, cheap meal at the market.</Text></p><p><Text>You can't park in the town centre, but you can park near the station.</Text></p></article></div>
     <div className="lesson-1b-task"><h3><Text>Write four useful sentences for tourists about your town.</Text></h3><div className="practice-example"><span>EXAMPLE</span><p><Text>You can buy fantastic fruit in the market.</Text></p></div>{Array.from({ length: 4 }, (_, index) => <label className="lesson-8a-writing-row" key={index}><span>{index + 1}</span><textarea onChange={(event) => onAnswer("8a-speaking-town-" + (index + 1), event.target.value)} placeholder="You can... / You can't..." value={answers["8a-speaking-town-" + (index + 1)] ?? ""} /></label>)}</div>
   </section>;
@@ -300,7 +325,7 @@ const reviewQuestions = [
 
 function Review(props: ExerciseProps) {
   const score = reviewQuestions.filter(([, , correct], index) => props.answers["8a-review-" + (index + 1)] === correct).length;
-  return <section className="lesson-panel"><Heading eyebrow="LESSON REVIEW" title="Your grammar race" Text={props.Text} /><div className="review-score"><span>{score} / {reviewQuestions.length}</span><div><b style={{ width: Math.round(score / reviewQuestions.length * 100) + "%" }} /></div><p><props.Text>Answer all questions. You can change an answer and try again.</props.Text></p></div><div className="review-exit-grid">{reviewQuestions.map(([prompt, options, correct], index) => <Choice id={"8a-review-" + (index + 1)} key={prompt} prompt={(index + 1) + ". " + prompt} options={options} correct={correct} {...props} />)}</div></section>;
+  return <section className="lesson-panel"><Heading eyebrow="LESSON REVIEW" title="Your grammar race" Text={props.Text} mode="IF THERE IS TIME" /><div className="review-score"><span>{score} / {reviewQuestions.length}</span><div><b style={{ width: Math.round(score / reviewQuestions.length * 100) + "%" }} /></div><p><props.Text>Answer all questions. You can change an answer and try again.</props.Text></p></div><div className="review-exit-grid">{reviewQuestions.map(([prompt, options, correct], index) => <Choice id={"8a-review-" + (index + 1)} key={prompt} prompt={(index + 1) + ". " + prompt} options={options} correct={correct} {...props} />)}</div><div className="lesson-8a-can-do"><strong>NOW I CAN</strong><props.Text>ask for permission, understand simple signs, and say what people can or can't do.</props.Text></div></section>;
 }
 
 const homeworkSigns = [
@@ -329,12 +354,12 @@ const homeworkSounds = [
 
 function Homework(props: ExerciseProps) {
   const { answers, onAnswer, Text } = props;
-  return <section className="lesson-panel"><Heading eyebrow="HOMEWORK · WORKBOOK 8A" title="Can I park here?" Text={Text} /><p className="lesson-8a-homework-intro"><Text>Complete the activities independently. Your answers stay available for your next class.</Text></p>
-    <details className="homework-extra" open><summary><span>1</span><b><Text>Signs: choose the meaning.</Text></b><small>6 items</small></summary><div className="lesson-8a-hw-signs">{homeworkSigns.map(([icon, correct], index) => <article key={correct}><i>{icon}</i><Choice id={"8a-homework-sign-" + (index + 1)} prompt={"Sign " + (index + 1)} options={[correct, correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't")]} correct={correct} {...props} /></article>)}</div></details>
-    <details className="homework-extra" open><summary><span>2</span><b><Text>Build the questions.</Text></b><small>5 items</small></summary><div className="lesson-8a-input-list"><div className="practice-example"><span>EXAMPLE</span><p><Text>Can I have an espresso, please?</Text></p></div>{homeworkQuestions.map(([prompt, correct], index) => <AnswerInput id={"8a-homework-question-" + (index + 1)} key={prompt} prompt={(index + 2) + ". " + prompt} correct={correct} {...props} />)}</div></details>
+  return <section className="lesson-panel"><Heading eyebrow="HOMEWORK · WORKBOOK 8A" title="Can I park here?" Text={Text} /><div className="lesson-8a-homework-welcome"><img alt="Homework notebook" src={media("homework-notebook.png")} /><p className="lesson-8a-homework-intro"><Text>Complete the activities independently. Your answers stay available for your next class.</Text></p></div>
+    <details className="homework-extra" open><summary><span>1</span><b><Text>Signs: choose the meaning.</Text></b><small>6 items</small></summary><div className="lesson-8a-hw-signs">{homeworkSigns.map(([icon, correct], index) => <article key={correct}><i>{icon}</i><Choice id={"8a-homework-sign-" + (index + 1)} prompt={"Sign " + (index + 1)} options={index % 2 === 0 ? [correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't"), correct] : [correct, correct.includes("can't") ? correct.replace("can't", "can") : correct.replace("can", "can't")]} correct={correct} {...props} /></article>)}</div></details>
+    <details className="homework-extra" open><summary><span>2</span><b><Text>Build the questions.</Text></b><small>5 items</small></summary><div className="lesson-8a-input-list"><div className="practice-example"><span>EXAMPLE</span><p><Text>Can I have an espresso, please?</Text></p></div>{homeworkQuestions.map(([prompt, correct], index) => <AnswerInput id={"8a-homework-question-" + (index + 1)} key={prompt} prompt={(index + 1) + ". " + prompt} correct={correct} {...props} />)}</div></details>
     <details className="homework-extra"><summary><span>3</span><b><Text>Pronunciation: choose the sound of can or can't.</Text></b><small>6 items</small></summary><div className="lesson-8a-ab-grid">{homeworkSounds.map(([sentence, correct], index) => <Choice id={"8a-homework-sound-" + (index + 1)} key={sentence} prompt={(index + 1) + ". " + sentence} options={["/ə/", "/æ/", "/ɑː/"]} correct={correct} {...props} />)}</div></details>
-    <details className="homework-extra"><summary><span>4</span><b><Text>Complete the verb phrases.</Text></b><small>9 items</small></summary><div className="lesson-8a-input-list">{[["📸 t_____ a ph_____", ["take a photo", "take photos"]], ["☕ h_____ a c_____", ["have a coffee", "have coffee"]], ["💳 p_____ by c_____", "pay by card"], ["💱 ch_____ m_____", "change money"], ["🏊 sw_____", "swim"], ["🚗 dr_____", "drive"], ["⚽ pl_____ f_____", "play football"], ["📱 u_____ your ph_____", ["use your phone", "use my phone"]], ["🅿️ p_____", "park"]].map(([prompt, correct], index) => <AnswerInput id={"8a-homework-phrase-" + (index + 1)} key={String(prompt)} prompt={(index + 2) + ". " + prompt} correct={correct as string | readonly string[]} {...props} />)}</div></details>
-    <details className="homework-extra"><summary><span>5</span><b><Text>Write about your country.</Text></b><small>at least 3 sentences</small></summary><div><p><Text>Write what people can or can't do in these places.</Text></p>{["in a school", "at the beach", "in a museum", "in a supermarket", "in a coffee shop", "in a gym"].map((place, index) => <label className="lesson-8a-writing-row" key={place}><span>{index + 1}</span><Text>{place}</Text><textarea onChange={(event) => onAnswer("8a-homework-writing-" + (index + 1), event.target.value)} placeholder="You can... / You can't..." value={answers["8a-homework-writing-" + (index + 1)] ?? ""} /></label>)}</div></details>
+    <details className="homework-extra"><summary><span>4</span><b><Text>Complete the verb phrases.</Text></b><small>9 items</small></summary><div className="lesson-8a-input-list">{[["📸 t_____ a ph_____", ["take a photo", "take photos"]], ["☕ h_____ a c_____", ["have a coffee", "have coffee"]], ["💳 p_____ by c_____", "pay by card"], ["💱 ch_____ m_____", "change money"], ["🏊 sw_____", "swim"], ["🚗 dr_____", "drive"], ["⚽ pl_____ f_____", "play football"], ["📱 u_____ your ph_____", ["use your phone", "use my phone"]], ["🅿️ p_____", "park"]].map(([prompt, correct], index) => <AnswerInput id={"8a-homework-phrase-" + (index + 1)} key={String(prompt)} prompt={(index + 1) + ". " + prompt} correct={correct as string | readonly string[]} {...props} />)}</div></details>
+    <details className="homework-extra"><summary><span>5</span><b><Text>Write about your country.</Text></b><small>at least 3 sentences</small></summary><div><p><Text>Choose at least three places and write one sentence about each. The other places are optional.</Text></p>{["in a school", "at the beach", "in a museum", "in a supermarket", "in a coffee shop", "in a gym"].map((place, index) => <label className={"lesson-8a-writing-row " + (index > 2 ? "optional" : "")} key={place}><span>{index + 1}</span><Text>{place}</Text>{index > 2 && <small>OPTIONAL</small>}<textarea onChange={(event) => onAnswer("8a-homework-writing-" + (index + 1), event.target.value)} placeholder={index > 2 ? "Optional" : "You can... / You can't..."} value={answers["8a-homework-writing-" + (index + 1)] ?? ""} /></label>)}</div></details>
     <details className="homework-extra"><summary><span>6</span><b><Text>Complete the conversations.</Text></b><small>5 gaps</small></summary><div><div className="lesson-8a-word-bank">{["a theory test", "I'm free", "learn to drive", "start the car", "Yes, of course"].map((phrase) => <span key={phrase}>{phrase}</span>)}</div>{[["When can we see the film? — ___ on Friday night.", "I'm free"], ["Can I have another drink? — ___. Here you are.", "Yes, of course"], ["I want to ___. Do you know an instructor?", "learn to drive"], ["Do you need to take ___?", "a theory test"], ["Your practical test begins now. Please ___.", "start the car"]].map(([prompt, correct], index) => { const parts = prompt.split("___"); const id = "8a-homework-conversation-" + (index + 1); const value = answers[id] ?? ""; return <label className="lesson-8a-select-row" key={prompt}><span>{index + 1}</span><Text>{parts[0]}</Text><select className={value ? (value === correct ? "is-correct" : "is-incorrect") : ""} onChange={(event) => onAnswer(id, event.target.value)} value={value}><option value="">Choose a phrase</option>{["a theory test", "I'm free", "learn to drive", "start the car", "Yes, of course"].map((phrase) => <option key={phrase}>{phrase}</option>)}</select><Text>{parts[1]}</Text>{value && <Feedback correct={value === correct} hint="Read the whole conversation and choose the natural phrase." />}</label>; })}</div></details>
   </section>;
 }

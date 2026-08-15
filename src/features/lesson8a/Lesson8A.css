@@ -585,3 +585,274 @@ input.is-incorrect { border-color: #cc5963 !important; background: #fff0f1 !impo
 @media (prefers-reduced-motion: reduce) {
   .lesson-8a-theme * { scroll-behavior: auto !important; }
 }
+
+/* Standalone 8A refinements */
+.lesson-8a-standalone-label {
+  justify-self: center;
+  padding: 9px 14px;
+  border: 1px solid rgba(15, 148, 136, .28);
+  border-radius: 999px;
+  color: #0b746b;
+  background: #e7f7f4;
+  font-size: .76rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.lesson-8a-section-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lesson-8a-section-heading > div > span,
+.lesson-8a-core-label {
+  width: max-content;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #087467;
+  background: #dff5ef;
+  font-size: .66rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.lesson-8a-section-heading > div > span:has(+ *) { display: inline-flex; }
+.lesson-8a-section-heading > div > span,
+.lesson-8a-core-label.extra {
+  color: #80511b;
+  background: #fff0cf;
+}
+
+.lesson-8a-section-heading > div > p + span:not(.extra) {
+  color: #087467;
+  background: #dff5ef;
+}
+
+.lesson-8a-extra-task {
+  border-style: dashed;
+  border-color: #e1bd78;
+  background: #fffdf7;
+}
+
+.lesson-8a-speaking-prompt {
+  margin: 16px 0 0;
+  padding: 13px 15px;
+  border-left: 4px solid #dc9b35;
+  border-radius: 10px;
+  background: #fff5df;
+  font-weight: 750;
+}
+
+.lesson-8a-missing-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.lesson-8a-missing-word {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.lesson-8a-missing-word input {
+  width: 92px;
+  min-height: 40px;
+  padding: 7px 9px;
+  border: 1px solid #c9c1b7;
+  border-radius: 9px;
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+
+.lesson-8a-check-button {
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: #168f82;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.lesson-8a-check-button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.lesson-8a-photo-match label {
+  grid-template-columns: 34px minmax(0, 1fr);
+}
+
+.lesson-8a-photo-match img {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 170px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.lesson-8a-dialogue-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 320px);
+  align-items: start;
+  gap: 16px;
+}
+
+.lesson-8a-dialogue-wrap > img {
+  position: sticky;
+  top: 92px;
+  width: 100%;
+  max-height: 520px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 14px 30px rgba(32, 48, 58, .14);
+}
+
+.lesson-8a-dialogue label,
+.lesson-8a-dialogue > div {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+
+.lesson-8a-dialogue .speaker-a { border-left: 5px solid #318ac0; background: #edf7fc; }
+.lesson-8a-dialogue .speaker-b { border-left: 5px solid #a25ab5; background: #f8effa; }
+.lesson-8a-dialogue > div > b,
+.lesson-8a-dialogue label > b { color: #254b61; }
+.lesson-8a-dialogue > div > span,
+.lesson-8a-dialogue label > span { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+
+.lesson-8a-practise-call {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #e6f6f2, #f5f0fa);
+}
+
+.lesson-8a-practise-call strong {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: 7px;
+  color: #fff;
+  background: #168f82;
+  font-size: .7rem;
+  letter-spacing: .06em;
+}
+
+.lesson-8a-test-result > img {
+  width: 100%;
+  height: 180px;
+  border-radius: 15px;
+  object-fit: cover;
+}
+
+.lesson-8a-input-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.lesson-8a-input-row > label {
+  display: grid;
+  grid-template-columns: minmax(220px, .9fr) minmax(260px, 1.1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.lesson-8a-input-row .lesson-1b-feedback {
+  grid-column: 1 / -1;
+}
+
+.lesson-8a-town-images {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lesson-8a-town-images img {
+  width: 100%;
+  height: 190px;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgba(32, 48, 58, .1);
+}
+
+.lesson-8a-can-do {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #9cd7cc;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e7f8f4, #fff);
+}
+
+.lesson-8a-can-do strong {
+  flex: 0 0 auto;
+  color: #087467;
+  letter-spacing: .08em;
+}
+
+.lesson-8a-homework-welcome {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.lesson-8a-homework-welcome img {
+  width: 100%;
+  height: 105px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.lesson-8a-writing-row.optional {
+  opacity: .82;
+  background: #faf9f6;
+}
+
+.lesson-8a-writing-row > small {
+  color: #8b6a31;
+  font-size: .64rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+
+@media (max-width: 900px) {
+  .lesson-8a-dialogue-wrap { grid-template-columns: 1fr; }
+  .lesson-8a-dialogue-wrap > img { position: static; max-height: 300px; }
+}
+
+@media (max-width: 760px) {
+  .lesson-8a-standalone-label { display: none; }
+  .lesson-8a-town-images { grid-template-columns: 1fr; }
+  .lesson-8a-town-images img { height: 210px; }
+  .lesson-8a-input-row { grid-template-columns: 1fr; }
+  .lesson-8a-input-row > label { grid-template-columns: 1fr; }
+  .lesson-8a-input-row input,
+  .lesson-8a-input-row .lesson-1b-feedback { grid-column: 1; }
+  .lesson-8a-homework-welcome { grid-template-columns: 1fr; }
+  .lesson-8a-homework-welcome img { height: 160px; }
+  .lesson-8a-dialogue label,
+  .lesson-8a-dialogue > div { grid-template-columns: 72px minmax(0, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .lesson-8a-photo-match img { height: 145px; }
+  .lesson-8a-practise-call,
+  .lesson-8a-can-do { align-items: flex-start; flex-direction: column; }
+}

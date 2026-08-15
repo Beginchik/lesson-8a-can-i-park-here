@@ -1,0 +1,30 @@
+import type { EntrySeed } from "./lexicon";
+
+export const lesson8aSeeds: EntrySeed[] = [
+  ["can't", "modal verb", "/kɑːnt/", "the negative form of can", "не мочь; нельзя", "You can't park here.", "I can't swim."],
+  ["park", "verb", "/pɑːk/", "to leave a vehicle in a place for a time", "парковать", "Can I park here?", "You can't park on a yellow line."],
+  ["drive", "verb", "/draɪv/", "to control a car or another vehicle", "водить машину", "Can you drive?", "You can't drive fast here."],
+  ["driving licence", "noun", "/ˈdraɪvɪŋ ˌlaɪsəns/", "an official document that permits you to drive", "водительские права", "When can you get a driving licence?", "She has a driving licence."],
+  ["theory test", "noun", "/ˈθɪəri test/", "a written test about driving rules", "теоретический экзамен", "The theory test has many questions.", "I need to take a theory test."],
+  ["practical test", "noun", "/ˈpræktɪkəl test/", "a test in which you show that you can drive", "практический экзамен", "The practical test is difficult.", "She passes her practical test."],
+  ["driving lesson", "noun", "/ˈdraɪvɪŋ ˌlesən/", "a class in which a person learns to drive", "урок вождения", "I want to book a driving lesson.", "The driving lesson is one hour."],
+  ["instructor", "noun", "/ɪnˈstrʌktə/", "a person who teaches a practical skill", "инструктор", "Anna phones a driving instructor.", "The instructor can help her."],
+  ["pass", "verb", "/pɑːs/", "to be successful in a test", "сдать экзамен", "Does Anna pass the test?", "I can pass the theory test."],
+  ["fail", "verb", "/feɪl/", "to be unsuccessful in a test", "не сдать экзамен", "Many people fail the first time.", "You fail after two mistakes."],
+  ["permission", "noun", "/pəˈmɪʃən/", "the right to do something", "разрешение", "Use can to ask for permission.", "You have permission to park here."],
+  ["possibility", "noun", "/ˌpɒsəˈbɪləti/", "the fact that something can happen or be done", "возможность", "Can shows possibility.", "There is a possibility of a lesson today."],
+  ["change money", "verb phrase", "/ˌtʃeɪndʒ ˈmʌni/", "to exchange one currency for another", "обменять деньги", "You can change money here.", "Where can I change money?"],
+  ["pay by card", "verb phrase", "/ˌpeɪ baɪ ˈkɑːd/", "to use a bank card to pay", "платить картой", "You can pay by card.", "Can I pay by card here?"],
+  ["pay cash", "verb phrase", "/ˌpeɪ ˈkæʃ/", "to pay using notes or coins", "платить наличными", "You can't pay cash here.", "Can I pay cash?"],
+  ["take photos", "verb phrase", "/ˌteɪk ˈfəʊtəʊz/", "to make pictures with a camera", "фотографировать", "You can't take photos here.", "Can I take photos in the museum?"],
+  ["use the internet", "verb phrase", "/ˌjuːz ði ˈɪntənet/", "to go online", "пользоваться интернетом", "You can use the internet here.", "I use the internet at home."],
+  ["use your phone", "verb phrase", "/ˌjuːz jə ˈfəʊn/", "to do something with your mobile phone", "пользоваться телефоном", "You can't use your phone here.", "Can I use my phone?"],
+  ["play football", "verb phrase", "/ˌpleɪ ˈfʊtbɔːl/", "to take part in a game of football", "играть в футбол", "You can't play football here.", "Can you play football?"],
+  ["swim", "verb", "/swɪm/", "to move through water", "плавать", "I can't swim.", "Can we swim here?"],
+  ["tourist", "noun", "/ˈtʊərɪst/", "a person visiting a place for a holiday", "турист", "You are a tourist in this town.", "Tourists can visit the market."],
+  ["total disaster", "noun phrase", "/ˌtəʊtəl dɪˈzɑːstə/", "a situation that goes very badly", "полная катастрофа", "My first lesson was a total disaster.", "The test is not a total disaster."],
+  ["of course", "expression", "/əv ˈkɔːs/", "used to say yes or to show that something is expected", "конечно", "Yes, of course.", "Can you help me? — Of course."],
+  ["I'm free", "expression", "/aɪm ˈfriː/", "I am available and have no plans", "я свободен; я свободна", "I'm free on Monday.", "I'm free after lunch."],
+  ["start the car", "verb phrase", "/ˌstɑːt ðə ˈkɑː/", "to turn on a car's engine", "завести машину", "Please start the car.", "Can you start the car?"],
+  ["learn to drive", "verb phrase", "/ˌlɜːn tə ˈdraɪv/", "to study and practise driving", "учиться водить", "Anna wants to learn to drive.", "I can learn to drive at eighteen."]
+];

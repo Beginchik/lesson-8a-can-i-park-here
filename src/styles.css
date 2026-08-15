@@ -4451,7 +4451,7 @@ main {
 .homework-extra > summary::-webkit-details-marker { display: none; }
 .homework-extra > summary::after { content: "+"; color: var(--purple); font-size: 1.5rem; font-weight: 800; }
 .homework-extra[open] > summary::after { content: "−"; }
-.homework-extra > summary span { color: var(--purple); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; }
+.homework-extra > summary > span { color: var(--purple); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; }
 .homework-extra > summary strong { margin-right: auto; }
 
 .homework-extra-content {
@@ -6562,7 +6562,7 @@ main {
 
 .homework-extra { margin-top: 22px; border: 1px solid #d8d0c6; border-radius: 16px; background: #fbfaf7; }
 .homework-extra > summary { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 16px; cursor: pointer; }
-.homework-extra > summary span { padding: 5px 8px; border-radius: 999px; color: #fff; background: #8b6d9f; font-size: .7rem; font-weight: 900; }
+.homework-extra > summary > span { padding: 5px 8px; border-radius: 999px; color: #fff; background: #8b6d9f; font-size: .7rem; font-weight: 900; }
 .homework-extra > summary small { color: #776d64; }
 .homework-extra > div { padding: 0 16px 16px; }
 .homework-summary { display: grid; grid-template-columns: 58px 1fr; align-items: center; gap: 14px; margin-top: 20px; padding: 17px; border-radius: 15px; background: #eef7f5; }
